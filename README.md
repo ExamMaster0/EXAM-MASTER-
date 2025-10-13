@@ -399,6 +399,13 @@
             font-size: 0.9rem;
         }
 
+        .exam-subjects {
+            margin-bottom: 15px;
+            color: #b8b8b8;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
         .exam-price {
             font-size: 1.1rem;
             color: var(--success);
@@ -628,6 +635,149 @@
             color: var(--success);
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .modal input::placeholder {
+            color: #b8b8b8;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-section {
+            padding: 120px 0 100px;
+            min-height: 80vh;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card h3 {
+            color: white;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dashboard-card h3 i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .dashboard-stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .dashboard-stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 5px;
+        }
+
+        .dashboard-stat-label {
+            font-size: 0.9rem;
+            color: #b8b8b8;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -787,13 +937,13 @@
                         <li><a href="#home">Home</a></li>
                         <li><a href="#mocks">Mock Tests</a></li>
                         <li><a href="#pdfs">PDF Store</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
                         <li><a href="#reviews">Reviews</a></li>
-                        <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                     <div class="auth-buttons">
-                        <a href="#" class="login-btn">Login</a>
-                        <a href="#" class="signup-btn">Sign Up</a>
+                        <a href="#" class="login-btn" id="openLogin">Login</a>
+                        <a href="#" class="signup-btn" id="openSignup">Sign Up</a>
                     </div>
                 </nav>
                 <div class="hamburger" id="hamburger">
@@ -814,24 +964,67 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#mocks">Mock Tests</a></li>
             <li><a href="#pdfs">PDF Store</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
             <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="mobile-auth-buttons">
-            <a href="#" class="login-btn">Login</a>
-            <a href="#" class="signup-btn">Sign Up</a>
+            <a href="#" class="login-btn" id="openLoginMobile">Login</a>
+            <a href="#" class="signup-btn" id="openSignupMobile">Sign Up</a>
         </div>
     </div>
 
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2>Login to Your Account</h2>
+            <input type="email" placeholder="Email Address" id="loginEmail">
+            <input type="password" placeholder="Password" id="loginPassword">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" id="closeLogin">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="submitLogin">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <h2>Create an Account</h2>
+            <input type="text" placeholder="Full Name" id="signupName">
+            <input type="email" placeholder="Email Address" id="signupEmail">
+            <input type="password" placeholder="Password" id="signupPassword">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" id="closeSignup">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="submitSignup">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h2>Complete Your Purchase</h2>
+            <p id="paymentItem" style="margin-bottom: 20px; color: #b8b8b8;">Item: </p>
+            <p id="paymentPrice" style="margin-bottom: 20px; color: var(--success); font-weight: 600;">Price: </p>
+            <input type="text" placeholder="Card Number" id="cardNumber">
+            <input type="text" placeholder="Expiry Date (MM/YY)" id="expiryDate">
+            <input type="text" placeholder="CVV" id="cvv">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" id="closePayment">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="submitPayment">Pay Now</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Empower your preparation. Learn smart. Score high.</h1>
+                <h1>Empower your preparation.<br>Learn smart. Score high.</h1>
                 <p>Access high-quality PDFs and real exam-style mock tests designed to help you master competitive exams at an affordable cost.</p>
                 <div class="cta-buttons">
                     <a href="#mocks" class="btn btn-primary">
@@ -858,7 +1051,7 @@
                     <div class="stat-label">Study PDFs</div>
                 </div>
                 <div class="stat-item fade-in">
-                    <div class="stat-number">1000k+</div>
+                    <div class="stat-number">100k+</div>
                     <div class="stat-label">Students</div>
                 </div>
             </div>
@@ -884,8 +1077,9 @@
                     </div>
                     <div class="exam-name">JKSSB Mock</div>
                     <div class="exam-details">Difficulty: Medium | Subjects: 5</div>
+                    <div class="exam-subjects">Subjects: General Knowledge, Mathematics, Reasoning, English, Computer</div>
                     <div class="exam-price">Pay ₹19 to Unlock Test</div>
-                    <button class="unlock-btn">Unlock Now</button>
+                    <button class="unlock-btn" data-item="JKSSB Mock" data-price="19">Unlock Now</button>
                 </div>
                 
                 <div class="exam-card fade-in">
@@ -894,8 +1088,9 @@
                     </div>
                     <div class="exam-name">SSC Mock</div>
                     <div class="exam-details">Difficulty: Hard | Subjects: 4</div>
+                    <div class="exam-subjects">Subjects: Quantitative Aptitude, English, Reasoning, General Awareness</div>
                     <div class="exam-price">Pay ₹19 to Unlock Test</div>
-                    <button class="unlock-btn">Unlock Now</button>
+                    <button class="unlock-btn" data-item="SSC Mock" data-price="19">Unlock Now</button>
                 </div>
                 
                 <div class="exam-card fade-in">
@@ -904,8 +1099,9 @@
                     </div>
                     <div class="exam-name">Railway Mock</div>
                     <div class="exam-details">Difficulty: Medium | Subjects: 6</div>
+                    <div class="exam-subjects">Subjects: Mathematics, General Intelligence, General Science, Current Affairs</div>
                     <div class="exam-price">Pay ₹19 to Unlock Test</div>
-                    <button class="unlock-btn">Unlock Now</button>
+                    <button class="unlock-btn" data-item="Railway Mock" data-price="19">Unlock Now</button>
                 </div>
                 
                 <div class="exam-card fade-in">
@@ -914,8 +1110,42 @@
                     </div>
                     <div class="exam-name">Banking Mock</div>
                     <div class="exam-details">Difficulty: Hard | Subjects: 5</div>
+                    <div class="exam-subjects">Subjects: Reasoning, Quantitative Aptitude, English, General Awareness, Computer</div>
                     <div class="exam-price">Pay ₹19 to Unlock Test</div>
-                    <button class="unlock-btn">Unlock Now</button>
+                    <button class="unlock-btn" data-item="Banking Mock" data-price="19">Unlock Now</button>
+                </div>
+
+                <div class="exam-card fade-in">
+                    <div class="exam-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="exam-name">UPSC Prelims Mock</div>
+                    <div class="exam-details">Difficulty: Very Hard | Subjects: 7</div>
+                    <div class="exam-subjects">Subjects: History, Geography, Polity, Economy, Science, Environment, Current Affairs</div>
+                    <div class="exam-price">Pay ₹19 to Unlock Test</div>
+                    <button class="unlock-btn" data-item="UPSC Prelims Mock" data-price="19">Unlock Now</button>
+                </div>
+
+                <div class="exam-card fade-in">
+                    <div class="exam-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="exam-name">Science & Tech Mock</div>
+                    <div class="exam-details">Difficulty: Medium | Subjects: 4</div>
+                    <div class="exam-subjects">Subjects: Physics, Chemistry, Biology, Computer Science</div>
+                    <div class="exam-price">Pay ₹19 to Unlock Test</div>
+                    <button class="unlock-btn" data-item="Science & Tech Mock" data-price="19">Unlock Now</button>
+                </div>
+
+                <div class="exam-card fade-in">
+                    <div class="exam-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="exam-name">Data Interpretation Mock</div>
+                    <div class="exam-details">Difficulty: Hard | Subjects: 3</div>
+                    <div class="exam-subjects">Subjects: Data Interpretation, Logical Reasoning, Quantitative Analysis</div>
+                    <div class="exam-price">Pay ₹19 to Unlock Test</div>
+                    <button class="unlock-btn" data-item="Data Interpretation Mock" data-price="19">Unlock Now</button>
                 </div>
             </div>
         </div>
@@ -937,79 +1167,125 @@
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> Quantitative Aptitude Guide
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="Quantitative Aptitude Guide" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> Reasoning Practice Sets
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="Reasoning Practice Sets" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> General Knowledge 2024
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="General Knowledge 2024" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> English Language Mastery
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="English Language Mastery" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> History Guide
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="History Guide" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> Political Science
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="Political Science" data-price="39">₹39</button>
                         </li>
                         <li>
                             <div class="pdf-name">
                                 <i class="fas fa-file-pdf"></i> Computer Fundamentals
                             </div>
-                            <div class="pdf-price">₹39</div>
+                            <button class="pdf-price buy-pdf" data-item="Computer Fundamentals" data-price="39">₹39</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section" id="dashboard">
+        <div class="container">
+            <div class="section-title">
+                <h2>My Dashboard</h2>
+                <p>Track your progress and access your purchased content</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card fade-in">
+                    <h3><i class="fas fa-chart-line"></i> Progress Overview</h3>
+                    <div class="dashboard-stats">
+                        <div class="dashboard-stat">
+                            <div class="dashboard-stat-number">5</div>
+                            <div class="dashboard-stat-label">Tests Taken</div>
+                        </div>
+                        <div class="dashboard-stat">
+                            <div class="dashboard-stat-number">72%</div>
+                            <div class="dashboard-stat-label">Average Score</div>
+                        </div>
+                        <div class="dashboard-stat">
+                            <div class="dashboard-stat-number">12</div>
+                            <div class="dashboard-stat-label">PDFs Purchased</div>
+                        </div>
+                        <div class="dashboard-stat">
+                            <div class="dashboard-stat-number">15</div>
+                            <div class="dashboard-stat-label">Study Hours</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <h3><i class="fas fa-book-open"></i> My Purchases</h3>
+                    <ul class="pdf-list">
+                        <li>
+                            <div class="pdf-name">
+                                <i class="fas fa-file-pdf"></i> Quantitative Aptitude Guide
+                            </div>
+                            <div class="pdf-price">Download</div>
+                        </li>
+                        <li>
+                            <div class="pdf-name">
+                                <i class="fas fa-file-pdf"></i> Reasoning Practice Sets
+                            </div>
+                            <div class="pdf-price">Download</div>
+                        </li>
+                        <li>
+                            <div class="pdf-name">
+                                <i class="fas fa-file-pdf"></i> General Knowledge 2024
+                            </div>
+                            <div class="pdf-price">Download</div>
                         </li>
                     </ul>
                 </div>
                 
-                <div class="pdf-card fade-in">
-                    <h3><i class="fas fa-history"></i> History</h3>
+                <div class="dashboard-card fade-in">
+                    <h3><i class="fas fa-clock"></i> Recent Activity</h3>
                     <ul class="pdf-list">
                         <li>
                             <div class="pdf-name">
-                                <i class="fas fa-shopping-cart"></i> JKSSB PDF - Purchased
+                                <i class="fas fa-play-circle"></i> Completed SSC Mock Test
                             </div>
-                            <div class="pdf-price">Completed</div>
+                            <div class="pdf-price">Score: 85%</div>
                         </li>
                         <li>
                             <div class="pdf-name">
-                                <i class="fas fa-eye"></i> SSC Guide - Viewed
+                                <i class="fas fa-shopping-cart"></i> Purchased History Guide
                             </div>
-                            <div class="pdf-price">In Progress</div>
+                            <div class="pdf-price">2 days ago</div>
                         </li>
                         <li>
                             <div class="pdf-name">
-                                <i class="fas fa-download"></i> Maths Formulas - Downloaded
+                                <i class="fas fa-bookmark"></i> Bookmarked Current Affairs
                             </div>
-                            <div class="pdf-price">Completed</div>
-                        </li>
-                        <li>
-                            <div class="pdf-name">
-                                <i class="fas fa-bookmark"></i> Current Affairs - Bookmarked
-                            </div>
-                            <div class="pdf-price">Saved</div>
-                        </li>
-                        <li>
-                            <div class="pdf-name">
-                                <i class="fas fa-star"></i> History Notes - Rated
-                            </div>
-                            <div class="pdf-price">5 Stars</div>
+                            <div class="pdf-price">1 week ago</div>
                         </li>
                     </ul>
                 </div>
@@ -1079,24 +1355,6 @@
                     </div>
                     <p class="review-text">"The platform is user-friendly and the content is top-notch. The quantitative aptitude PDF is a game-changer! The instant score feature after mock tests helped me track my progress effectively."</p>
                 </div>
-                
-                <div class="review-card fade-in">
-                    <div class="review-header">
-                        <div class="review-avatar">NM</div>
-                        <div class="review-info">
-                            <h4>Neha Mehta</h4>
-                            <div class="review-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="review-date">Banking Exam - 2 months ago</div>
-                        </div>
-                    </div>
-                    <p class="review-text">"I've tried many platforms, but Exam MASTER stands out. The railway mock tests are incredibly accurate and helpful. The customer support team is very responsive and helpful."</p>
-                </div>
             </div>
         </div>
     </section>
@@ -1109,10 +1367,9 @@
                     <h3>Exam MASTER</h3>
                     <p style="color: #b8b8b8; margin-bottom: 20px;">Your trusted partner in competitive exam preparation.</p>
                     <div style="display: flex; gap: 15px;">
-                        <a href="#" style="color: #b8b8b8; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="https://t.me/ExamMaster0" style="color: #b8b8b8; font-size: 1.2rem;"><i class="fab fa-telegram"></i></a>
                         <a href="#" style="color: #b8b8b8; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
                         <a href="#" style="color: #b8b8b8; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="color: #b8b8b8; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
@@ -1121,8 +1378,8 @@
                         <li><a href="#home">Home</a></li>
                         <li><a href="#mocks">Mock Tests</a></li>
                         <li><a href="#pdfs">PDF Store</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
                         <li><a href="#reviews">Reviews</a></li>
-                        <li><a href="#about">About Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1138,9 +1395,8 @@
                 <div class="footer-column">
                     <h3>Contact Us</h3>
                     <ul class="footer-links">
-                        <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> support@exammaster.com</li>
-                        <li><i class="fas fa-phone" style="margin-right: 10px;"></i> +91 98765 43210</li>
-                        <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> New Delhi, India</li>
+                        <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> dar596020@gmail.com</li>
+                        <li><i class="fab fa-telegram" style="margin-right: 10px;"></i> t.me/ExamMaster0</li>
                     </ul>
                 </div>
             </div>
@@ -1156,6 +1412,10 @@
     </footer>
 
     <script>
+        // User authentication state
+        let isLoggedIn = false;
+        let currentUser = null;
+
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
@@ -1190,6 +1450,164 @@
             document.body.style.overflow = 'auto';
         });
 
+        // Modal functionality
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const paymentModal = document.getElementById('paymentModal');
+
+        // Open login modal
+        document.getElementById('openLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+
+        document.getElementById('openLoginMobile').addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Open signup modal
+        document.getElementById('openSignup').addEventListener('click', function(e) {
+            e.preventDefault();
+            signupModal.style.display = 'flex';
+        });
+
+        document.getElementById('openSignupMobile').addEventListener('click', function(e) {
+            e.preventDefault();
+            signupModal.style.display = 'flex';
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modals
+        document.getElementById('closeLogin').addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+
+        document.getElementById('closeSignup').addEventListener('click', function() {
+            signupModal.style.display = 'none';
+        });
+
+        document.getElementById('closePayment').addEventListener('click', function() {
+            paymentModal.style.display = 'none';
+        });
+
+        // Login functionality
+        document.getElementById('submitLogin').addEventListener('click', function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (email && password) {
+                isLoggedIn = true;
+                currentUser = email;
+                loginModal.style.display = 'none';
+                alert('Login successful! Welcome back to Exam MASTER.');
+                updateAuthUI();
+            } else {
+                alert('Please enter both email and password.');
+            }
+        });
+
+        // Signup functionality
+        document.getElementById('submitSignup').addEventListener('click', function() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            if (name && email && password) {
+                isLoggedIn = true;
+                currentUser = email;
+                signupModal.style.display = 'none';
+                alert('Account created successfully! Welcome to Exam MASTER.');
+                updateAuthUI();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+
+        // Payment functionality
+        document.getElementById('submitPayment').addEventListener('click', function() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            
+            if (cardNumber && expiryDate && cvv) {
+                paymentModal.style.display = 'none';
+                alert('Payment successful! Your purchase has been completed.');
+            } else {
+                alert('Please fill in all payment details.');
+            }
+        });
+
+        // Update UI based on authentication state
+        function updateAuthUI() {
+            if (isLoggedIn) {
+                document.querySelectorAll('.login-btn').forEach(btn => {
+                    btn.textContent = 'Dashboard';
+                    btn.href = '#dashboard';
+                });
+                document.querySelectorAll('.signup-btn').forEach(btn => {
+                    btn.textContent = 'Logout';
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        isLoggedIn = false;
+                        currentUser = null;
+                        updateAuthUI();
+                        alert('You have been logged out.');
+                    });
+                });
+            } else {
+                document.querySelectorAll('.login-btn').forEach(btn => {
+                    btn.textContent = 'Login';
+                    btn.href = '#';
+                });
+                document.querySelectorAll('.signup-btn').forEach(btn => {
+                    btn.textContent = 'Sign Up';
+                    btn.href = '#';
+                });
+            }
+        }
+
+        // Unlock buttons functionality
+        document.querySelectorAll('.unlock-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!isLoggedIn) {
+                    alert('Please login first to purchase mock tests.');
+                    loginModal.style.display = 'flex';
+                    return;
+                }
+                
+                const itemName = this.getAttribute('data-item');
+                const itemPrice = this.getAttribute('data-price');
+                
+                document.getElementById('paymentItem').textContent = 'Item: ' + itemName;
+                document.getElementById('paymentPrice').textContent = 'Price: ₹' + itemPrice;
+                paymentModal.style.display = 'flex';
+            });
+        });
+
+        // Buy PDF buttons functionality
+        document.querySelectorAll('.buy-pdf').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!isLoggedIn) {
+                    alert('Please login first to purchase PDFs.');
+                    loginModal.style.display = 'flex';
+                    return;
+                }
+                
+                const itemName = this.getAttribute('data-item');
+                const itemPrice = this.getAttribute('data-price');
+                
+                document.getElementById('paymentItem').textContent = 'Item: ' + itemName;
+                document.getElementById('paymentPrice').textContent = 'Price: ₹' + itemPrice;
+                paymentModal.style.display = 'flex';
+            });
+        });
+
         // Fade-in animation on scroll
         document.addEventListener('DOMContentLoaded', function() {
             const fadeElements = document.querySelectorAll('.fade-in');
@@ -1210,33 +1628,6 @@
             
             // Check on scroll
             window.addEventListener('scroll', fadeInOnScroll);
-            
-            // Login button functionality
-            const loginBtn = document.querySelectorAll('.login-btn');
-            loginBtn.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    alert('Redirecting to login page...');
-                });
-            });
-            
-            // Sign up button functionality
-            const signupBtn = document.querySelectorAll('.signup-btn');
-            signupBtn.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    alert('Redirecting to sign up page...');
-                });
-            });
-            
-            // Unlock buttons functionality
-            const unlockButtons = document.querySelectorAll('.unlock-btn');
-            unlockButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const examName = this.closest('.exam-card').querySelector('.exam-name').textContent;
-                    alert(`Processing payment of ₹19 for ${examName}`);
-                });
-            });
 
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
