@@ -1,4 +1,0 @@
-// Supabase & Razorpay configuration
-export const SUPABASE_URL = "bkexliskprtpaikwlkzy";
-export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrZXhsaXNrcHJ0cGFpa3dsa3p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMjgwMjUsImV4cCI6MjA3NTkwNDAyNX0.kEDMvvbd1GPCw9vMCOPOlsZLaFenzqU7UWUMyk6zsRU";
-export const RAZORPAY_KEY_ID = "rzp_test_RTbzjQYm1Wq8Nl";
