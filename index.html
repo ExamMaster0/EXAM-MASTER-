@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamMaster0 - Real PDF Store</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --primary: #667eea; --secondary: #764ba2; --accent: #ff6b6b; --success: #4CAF50; }
+        body { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; line-height: 1.6; min-height: 100vh; }
+        .navbar { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 1rem 2rem; position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: white; display: flex; align-items: center; gap: 0.5rem; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: all 0.3s ease; padding: 0.5rem 1rem; border-radius: 25px; }
+        .nav-links a:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        .container { max-width: 1200px; margin: 100px auto 2rem; padding: 0 2rem; }
+        .page { display: none; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border-radius: 20px; padding: 3rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .active { display: block; }
+        .pdf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .pdf-card { background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 2rem; text-align: center; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .pdf-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.15); }
+        .pdf-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .price { font-size: 1.5rem; font-weight: bold; color: #ffd700; margin: 1rem 0; }
+        .buy-btn { background: linear-gradient(45deg, var(--accent), #ffd700); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .buy-btn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3); }
+        .section-title { font-size: 2.5rem; margin-bottom: 2rem; text-align: center; background: linear-gradient(45deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo"><span>📚</span> ExamMaster0</div>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home')">Home</a>
+                <a href="#" onclick="showPage('pdfs')">PDF Store</a>
+                <a href="#" onclick="showPage('tests')">Mock Tests</a>
+                <a href="#" onclick="showPage('admin')">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <h1 class="section-title">Welcome to ExamMaster0</h1>
+            <p style="text-align: center; font-size: 1.3rem; margin-bottom: 3rem;">
+                Real PDFs • Real Mock Tests • Real Payments
+            </p>
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <button class="buy-btn" onclick="showPage('pdfs')" style="padding: 18px 35px; font-size: 1.2rem;">📚 Browse PDF Store</button>
+                <button class="buy-btn" onclick="showPage('tests')" style="padding: 18px 35px; font-size: 1.2rem; background: rgba(255,255,255,0.2);">⏱️ Take Mock Test</button>
+            </div>
+        </div>
+
+        <!-- PDF Store Page -->
+        <div id="pdfs" class="page">
+            <h2 class="section-title">PDF Store</h2>
+            <div class="pdf-grid" id="pdfGrid">
+                <!-- Real PDFs will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Other pages... -->
+    </div>
+
+    <script>
+        // AAPKI ACTUAL PDFs - HARDCODED (100% WORKING)
+        const realPDFs = [
+            {
+                id: 1,
+                title: "History Guide",
+                description: "Complete history guide for competitive exams",
+                price: 39,
+                file_url: "https://bkexliskprtpaikwlkzy.supabase.co/storage/v1/object/public/the%20king's%20speech/%20history.pdf"
+            },
+            {
+                id: 2,
+                title: "Computer Science", 
+                description: "Complete computer science fundamentals guide",
+                price: 39,
+                file_url: "https://bkexliskprtpaikwlkzy.supabase.co/storage/v1/object/public/the%20king's%20speech/Computer%201.pdf"
+            },
+            {
+                id: 3,
+                title: "Political Science",
+                description: "Comprehensive political science and constitution guide",
+                price: 39, 
+                file_url: "https://bkexliskprtpaikwlkzy.supabase.co/storage/v1/object/public/the%20king's%20speech/Political%201%20(1).pdf"
+            }
+        ];
+
+        // Razorpay Key (YAHAN APNI KEY DALEN)
+        const RAZORPAY_KEY_ID = 'rzp_test_RU8l1ZYO11jMkQ';
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'pdfs') loadRealPDFs();
+        }
+
+        // Load Real PDFs
+        function loadRealPDFs() {
+            const pdfGrid = document.getElementById('pdfGrid');
+            pdfGrid.innerHTML = '';
+            
+            realPDFs.forEach(pdf => {
+                const pdfCard = `
+                    <div class="pdf-card">
+                        <div class="pdf-icon">📘</div>
+                        <h3>${pdf.title}</h3>
+                        <p>${pdf.description}</p>
+                        <div class="price">₹${pdf.price}</div>
+                        <button class="buy-btn" onclick="buyRealPDF(${pdf.id}, '${pdf.title}', ${pdf.price})">
+                            Buy Now
+                        </button>
+                    </div>
+                `;
+                pdfGrid.innerHTML += pdfCard;
+            });
+        }
+
+        // Buy PDF Function
+        function buyRealPDF(pdfId, title, price) {
+            if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID === 'rzp_test_xxxxxxxxxxxxx') {
+                alert('Please setup Razorpay Key first in the code');
+                return;
+            }
+
+            const options = {
+                key: RAZORPAY_KEY_ID,
+                amount: price * 100,
+                currency: "INR",
+                name: "ExamMaster0",
+                description: `PDF: ${title}`,
+                handler: function(response) {
+                    const purchasedPDF = realPDFs.find(pdf => pdf.id === pdfId);
+                    alert(`Payment Successful! Download your PDF: ${purchasedPDF.title}\n\nDownload Link: ${purchasedPDF.file_url}`);
+                },
+                prefill: {
+                    name: "Customer Name",
+                    email: "customer@example.com"
+                },
+                theme: {
+                    color: "#667eea"
+                }
+            };
+            
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRealPDFs();
+        });
+    </script>
+</body>
+</html>
