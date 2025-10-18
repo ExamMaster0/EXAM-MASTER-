@@ -1,158 +1,150 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Shield, Download, Award } from 'lucide-react'
+import { Mail, Smartphone } from 'lucide-react'
+import { signInWithOtp, verifyOtp } from '../../lib/supabase'
 
-export default function Home() {
-  const features = [
-    {
-      icon: <Download className="h-8 w-8" />,
-      title: "Premium PDFs",
-      description: "Access high-quality study materials and exam resources"
-    },
-    {
-      icon: <Award className="h-8 w-8" />,
-      title: "Mock Tests",
-      description: "Practice with realistic exam simulations and detailed analytics"
-    },
-    {
-      icon: <Shield className="h-8 w-8" />,
-      title: "Secure Platform",
-      description: "Your data and payments are protected with enterprise-grade security"
+export default function Auth() {
+  const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
+  const [step, setStep] = useState('email') // 'email' or 'otp'
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage('')
+
+    const { error } = await signInWithOtp(email)
+    
+    if (error) {
+      setMessage(error.message)
+    } else {
+      setMessage('OTP sent to your email!')
+      setStep('otp')
     }
-  ]
+    setLoading(false)
+  }
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage('')
+
+    const { error } = await verifyOtp(email, otp)
+    
+    if (error) {
+      setMessage(error.message)
+    } else {
+      setMessage('Login successful! Redirecting...')
+      window.location.href = '/dashboard'
+    }
+    setLoading(false)
+  }
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600"></div>
-        
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-white/10"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 100 + 50}px`,
-                height: `${Math.random() * 100 + 50}px`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.3, 0.7, 0.3],
-              }}
-              transition={{
-                duration: Math.random() * 3 + 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
+      >
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Welcome to ExamMaster
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Enter your email to receive OTP
+          </p>
         </div>
 
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
-          >
-            Master Your
-            <span className="block bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
-              Exams
-            </span>
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-blue-100 mb-8"
-          >
-            Premium study materials, mock tests, and everything you need to excel
-          </motion.p>
-
+        {message && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`p-4 rounded-lg ${
+              message.includes('successful') 
+                ? 'bg-green-50 text-green-700 border border-green-200'
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }`}
           >
-            <motion.a
-              href="/store"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group bg-white text-indigo-600 px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-2xl transition-all"
-            >
-              <span>Explore PDFs</span>
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-            
-            <motion.a
-              href="/tests"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-colors"
-            >
-              Take Mock Test
-            </motion.a>
+            {message}
           </motion.div>
-        </div>
+        )}
 
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2"></div>
-          </div>
-        </motion.div>
-      </section>
+        {step === 'email' ? (
+          <form className="mt-8 space-y-6" onSubmit={handleSendOtp}>
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Enter your email"
+                />
+              </div>
+            </div>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Why Choose <span className="text-indigo-600">ExamMaster</span>?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We provide everything you need to prepare effectively and boost your confidence
-            </p>
-          </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              {loading ? 'Sending OTP...' : 'Send OTP'}
+            </motion.button>
+          </form>
+        ) : (
+          <form className="mt-8 space-y-6" onSubmit={handleVerifyOtp}>
+            <div>
+              <label htmlFor="otp" className="sr-only">
+                OTP
+              </label>
+              <div className="relative">
+                <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  id="otp"
+                  name="otp"
+                  type="text"
+                  required
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-lg tracking-widest"
+                  placeholder="Enter OTP"
+                  maxLength={6}
+                />
+              </div>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all"
-              >
-                <div className="text-indigo-600 mb-4">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              {loading ? 'Verifying...' : 'Verify OTP'}
+            </motion.button>
+
+            <button
+              type="button"
+              onClick={() => setStep('email')}
+              className="w-full text-center text-sm text-indigo-600 hover:text-indigo-500"
+            >
+              Change email
+            </button>
+          </form>
+        )}
+      </motion.div>
     </div>
   )
 }
